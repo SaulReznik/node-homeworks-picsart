@@ -28,6 +28,9 @@ const Registration = () => {
     [setFields]
   );
 
+  const validation = () =>
+    fields.username.length < 3 || fields.password.length < 8;
+
   const handleRegistrationSubmit = useCallback(
     async e => {
       e.preventDefault();
@@ -66,7 +69,12 @@ const Registration = () => {
           placeholder="password"
           onChange={e => handleFieldChange(e)}
         />
-        <input className={cx('submit')} type="submit" value="Register" />
+        <input
+          disabled={validation()}
+          className={cx('submit')}
+          type="submit"
+          value="Register"
+        />
         <span>
           Already have an account? <Link to="/login">Log in</Link>
         </span>

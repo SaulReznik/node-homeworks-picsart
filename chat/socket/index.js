@@ -19,11 +19,12 @@ io.use((socket, next) => {
   }
 }).on('connection', socket => {
   socket.emit('connected', {
-    user: socket.decoded.username
+    user: socket.decoded.username,
+    messages
   });
 
   socket.on('newMessage', message => {
     messages.push(message);
-    socket.emit('messages', messages);
+    io.emit('messages', messages);
   });
 });

@@ -1,13 +1,11 @@
 import { useState, useCallback } from 'react';
 import { useHistory, Link } from 'react-router-dom';
-import io from 'socket.io-client';
 import classNames from 'classnames/bind';
 
 import styles from './Login.module.css';
 
 const cx = classNames.bind(styles);
 const apiUrl = 'http://localhost:3001';
-const socketUrl = 'http://localhost:3002';
 
 const Login = () => {
   const [fields, setFields] = useState({
@@ -28,6 +26,9 @@ const Login = () => {
     },
     [setFields]
   );
+
+  const validation = () =>
+    fields.username.length < 3 || fields.password.length < 8;
 
   const handleLoginSubmit = useCallback(
     async e => {
@@ -72,7 +73,12 @@ const Login = () => {
           placeholder="password"
           onChange={e => handleFieldChange(e)}
         />
-        <input className={cx('submit')} type="submit" value="Login" />
+        <input
+          disabled={validation()}
+          className={cx('submit')}
+          type="submit"
+          value="Login"
+        />
         <span>
           Not a registrated yet? <Link to="/registration">Register</Link>
         </span>

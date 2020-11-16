@@ -21,26 +21,21 @@ const Chat = () => {
   );
 
   useEffect(() => {
-    console.log(socketRef.current);
     socketRef.current.on('connected', msg => {
       console.log('connected');
       setUser(msg.user);
       setIsConnected(true);
-      socketRef.current.on('message', message => {
-        setMessages(messages => [...messages, message]);
-      });
+      setMessages(msg.messages);
     });
-
-    // return () => {
-    //   socketRef.current.disconnect();
-    // };
   }, []);
 
   const inputChangeHandler = e => setInput(e.target.value);
 
   const sendMessage = () => {
     socketRef.current.emit('newMessage', `${user}: ${input}`);
-    socketRef.current.on('messages', newMessages => setMessages(newMessages));
+    socketRef.current.on('messages', newMessages => {
+      setMessages(newMessages);
+    });
     setInput('');
   };
 

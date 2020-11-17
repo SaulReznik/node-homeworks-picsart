@@ -27,15 +27,17 @@ const Chat = () => {
       setIsConnected(true);
       setMessages(msg.messages);
     });
+
+    socketRef.current.on('newMessage', newMessage => {
+      setMessages(messages => [...messages, newMessage]);
+    });
   }, []);
 
   const inputChangeHandler = e => setInput(e.target.value);
 
   const sendMessage = () => {
-    socketRef.current.emit('newMessage', `${user}: ${input}`);
-    socketRef.current.on('messages', newMessages => {
-      setMessages(newMessages);
-    });
+    socketRef.current.emit('sendMessage', `${user}: ${input}`);
+
     setInput('');
   };
 

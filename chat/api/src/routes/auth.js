@@ -1,6 +1,6 @@
 const KoaRouter = require('koa-router');
 
-const { signIn, signUp } = require('../controllers/auth');
+const { signIn, signUp } = require('../controllers');
 
 const authRouter = new KoaRouter();
 

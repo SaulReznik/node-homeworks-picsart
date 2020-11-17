@@ -1,28 +1,22 @@
-const io = require('socket.io').listen(3002);
-const jwt = require('jsonwebtoken');
+const socket = require('socket.io');
 const { MessageModel } = require('@saulreznik/chat-mongo-models');
 const mongoose = require('mongoose');
 
-const { jwtToken, urlDB } = require('./config');
+const { authValidation } = require('./middlewares');
+const { PORT, DB_URI } = require('./config');
+
+const io = socket.listen(PORT || 3002);
 
 //MongoDB connection
-mongoose.connect(urlDB, {
+mongoose.connect(DB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 });
 
-//User verification via handshake
-io.use((socket, next) => {
-  if (socket.handshake.query && socket.handshake.query.token) {
-    jwt.verify(socket.handshake.query.token, jwtToken, (err, decoded) => {
-      if (err) return next(new Error('Authentication error'));
-      socket.decoded = decoded;
-      next();
-    });
-  } else {
-    next(new Error('Authentication error'));
-  }
-}).on('connection', async socket => {
+//Middlewares
+io.use(authValidation);
+
+io.on('connection', async socket => {
   try {
     const messagesDB = await MessageModel.find();
     const messages = messagesDB.map(item => item.message);
@@ -32,14 +26,12 @@ io.use((socket, next) => {
       messages
     });
 
-    socket.on('newMessage', async message => {
+    socket.on('sendMessage', async message => {
       try {
         const Message = new MessageModel({ message });
         await Message.save();
-        const messagesDB = await MessageModel.find();
-        const messages = messagesDB.map(item => item.message);
 
-        io.emit('messages', messages);
+        io.emit('newMessage', message);
       } catch (err) {
         console.log(err);
       }

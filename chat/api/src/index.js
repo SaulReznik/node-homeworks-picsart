@@ -1,12 +1,19 @@
 const Koa = require('koa');
 const KoaRouter = require('koa-router');
 const bodyParser = require('koa-bodyparser');
+const mongoose = require('mongoose');
 
-const config = require('./config');
+const { PORT, DB_URI } = require('./config');
 const authRoutes = require('./routes/auth');
 
 const app = new Koa();
 const router = new KoaRouter();
+
+//MongoDB connection
+mongoose.connect(DB_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
 
 app.use(bodyParser());
 app.use(async (ctx, next) => {
@@ -22,4 +29,4 @@ app.use(async (ctx, next) => {
 app.use(router.routes()).use(router.allowedMethods());
 app.use(authRoutes.routes()).use(authRoutes.allowedMethods());
 
-app.listen(config.PORT || 3001);
+app.listen(PORT || 3001);

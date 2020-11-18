@@ -9,7 +9,7 @@ const token = sessionStorage.getItem('token');
 const cx = classNames.bind(styles);
 
 const Chat = () => {
-  const [user, setUser] = useState('');
+  const [user, setUser] = useState(JSON.parse(sessionStorage.getItem('user')));
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [isConnected, setIsConnected] = useState(false);
@@ -23,7 +23,6 @@ const Chat = () => {
   useEffect(() => {
     socketRef.current.on('connected', msg => {
       console.log('connected');
-      setUser(msg.user);
       setIsConnected(true);
       setMessages(msg.messages);
     });
@@ -36,7 +35,10 @@ const Chat = () => {
   const inputChangeHandler = e => setInput(e.target.value);
 
   const sendMessage = () => {
-    socketRef.current.emit('sendMessage', `${user}: ${input}`);
+    socketRef.current.emit('sendMessage', {
+      user: user.username,
+      message: input
+    });
 
     setInput('');
   };
@@ -47,10 +49,12 @@ const Chat = () => {
   return (
     <div className={cx('chat-container')}>
       <div className={cx('messages-container')}>
-        <div className={cx('message-container')}>Greetings {user}!!!</div>
+        <div className={cx('message-container')}>
+          Greetings {user.username}!!!
+        </div>
         {messages.map((message, index) => (
           <div className={cx('message-container')} key={index}>
-            {message}
+            {message.user}: {message.message}
           </div>
         ))}
       </div>

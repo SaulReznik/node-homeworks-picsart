@@ -11,9 +11,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@saulreznik/chat-mongo-models": "^1.2.1",
     "jsonwebtoken": "^8.5.1",
     "koa": "^2.13.0",
     "koa-bodyparser": "^4.3.0",
-    "koa-router": "^9.4.0"
+    "koa-router": "^9.4.0",
+    "mongoose": "^5.10.15"
   }
 }

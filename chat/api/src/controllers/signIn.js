@@ -1,17 +1,18 @@
 const jwt = require('jsonwebtoken');
+const { UserModel } = require('@saulreznik/chat-mongo-models');
 
 const config = require('../config');
-const { getUsers } = require('../helpers');
 
 module.exports = async ({ request, response }) => {
   try {
     const { username, password } = request.body;
-    const users = await getUsers('./db.json');
 
-    if (
-      users[username] &&
-      Buffer.from(users[username].password, 'base64').toString() === password
-    ) {
+    const user = await UserModel.findOne({
+      username: username,
+      password: Buffer.from(password).toString('base64')
+    });
+
+    if (user) {
       const accessToken = jwt.sign(
         {
           username: username
@@ -20,7 +21,11 @@ module.exports = async ({ request, response }) => {
       );
 
       response.body = {
-        accessToken
+        accessToken,
+        user: {
+          id: user._id,
+          username: user.username
+        }
       };
     } else {
       response.status = 404;

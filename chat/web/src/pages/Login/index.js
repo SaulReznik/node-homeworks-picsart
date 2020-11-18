@@ -44,8 +44,9 @@ const Login = () => {
           body: body
         });
 
-        const token = await response.json();
-        sessionStorage.setItem('token', token.accessToken);
+        const data = await response.json();
+        sessionStorage.setItem('token', data.accessToken);
+        sessionStorage.setItem('user', JSON.stringify(data.user));
         push('/chat');
       } catch (err) {
         console.log('login Submit Error ------->', err);

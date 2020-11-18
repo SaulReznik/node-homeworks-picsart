@@ -1,10 +1,11 @@
 const crypto = require('crypto');
+const { UserModel } = require('@saulreznik/chat-mongo-models');
 
 const { getUsers, addUserToDB } = require('../helpers');
 
 module.exports = async ({ request, response }) => {
   try {
-    const users = await getUsers('./db.json');
+    //const users = await getUsers('./db.json');
     if (!request.body.password || request.body.password.length < 8) {
       response.status = 400;
       response.body = 'Please provide valid password';
@@ -16,23 +17,24 @@ module.exports = async ({ request, response }) => {
       return;
     }
 
-    if (request.body.username in users) {
-      response.status = 400;
-      response.body = 'User with the given username is already exists';
-      return;
-    }
+    // if (request.body.username in users) {
+    //   response.status = 400;
+    //   response.body = 'User with the given username is already exists';
+    //   return;
+    // }
 
     const cryptedPass = Buffer.from(request.body.password).toString('base64');
 
-    const user = {
+    const User = new UserModel({
       ...request.body,
       id: crypto.randomBytes(16).toString('hex'),
       password: cryptedPass
-    };
+    });
 
-    await addUserToDB('./db.json', user);
+    const savedUser = await User.save();
+    //await addUserToDB('./db.json', user);
     response.status = 200;
-    response.body = users;
+    response.body = savedUser;
     return;
   } catch (err) {
     console.log(err);

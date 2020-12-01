@@ -1,5 +1,5 @@
 const crypto = require('crypto');
-const { UserModel } = require('@saulreznik/chat-mongo-models');
+const { UserModel } = require('chat-mongo-models-picsart');
 
 const { getUsers, addUserToDB } = require('../helpers');
 

@@ -11,7 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@saulreznik/chat-mongo-models": "^1.2.1",
+    "chat-mongo-models-picsart": "^1.0.0",
     "jsonwebtoken": "^8.5.1",
     "koa": "^2.13.0",
     "koa-bodyparser": "^4.3.0",

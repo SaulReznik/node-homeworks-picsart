@@ -15,6 +15,7 @@ mongoose.connect(DB_URI, {
   useUnifiedTopology: true
 });
 
+// Middlewares
 app.use(bodyParser());
 app.use(async (ctx, next) => {
   ctx.set('Access-Control-Allow-Origin', '*');

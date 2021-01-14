@@ -1,9 +1,9 @@
 const helpers = require('../helpers');
 
-exports.getUser = async (req, res, next) => {
+exports.getUser = async (req, res) => {
   try {
     const users = await helpers.getUsers('./db.json');
-    console.log(users[req.body.username]);
+
     return res.status(200).send(users[req.body.username]);
   } catch (err) {
     console.log('Get User Error');

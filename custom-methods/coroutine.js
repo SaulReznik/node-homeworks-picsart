@@ -1,4 +1,4 @@
-function promise1() {
+const promise1 = () => {
   return new Promise(r => {
     setTimeout(() => {
       r('promise1');
@@ -6,7 +6,7 @@ function promise1() {
   });
 }
 
-function promise2() {
+const promise2 = () => {
   return new Promise(r => {
     setTimeout(() => {
       r('promise2');
